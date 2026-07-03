@@ -88,6 +88,8 @@ mix*=#6E4A7E
 
 Patterns use glob matching and are checked top-to-bottom — first match wins.
 
+Command patterns apply while a command is running. Directory patterns are matched against the current directory whenever the shell is idle, so the tab keeps the directory color between commands. `~` expands to your home directory, so `~/work/acme*=#E91E63` works too.
+
 ## Options
 
 ### Default (idle) color

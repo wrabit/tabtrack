@@ -198,6 +198,22 @@ function _tt_match() {
   fi
 }
 
+# ─── Idle color ────────────────────────────────────────────────────────────────
+# When no command is running, directory patterns from user config are matched
+# against $PWD. First match wins; falls back to TT_DEFAULT.
+
+function _tt_idle_color() {
+  local k pattern
+  for k in "${_tt_user_order[@]}"; do
+    pattern="${k/#\~/$HOME}"
+    if [[ "$PWD" == $~pattern ]]; then
+      echo "${_tt_user_colors[$k]}"
+      return 0
+    fi
+  done
+  echo "$TT_DEFAULT"
+}
+
 # ─── Hooks ─────────────────────────────────────────────────────────────────────
 
 function _tt_preexec() {
@@ -205,7 +221,7 @@ function _tt_preexec() {
 }
 
 function _tt_precmd() {
-  _tt_set_color "$TT_DEFAULT"
+  _tt_set_color "$(_tt_idle_color)"
 }
 
 preexec_functions=(${preexec_functions[@]} "_tt_preexec")
@@ -213,4 +229,4 @@ precmd_functions=(${precmd_functions[@]} "_tt_precmd")
 
 # ─── Set idle color on startup ─────────────────────────────────────────────────
 
-_tt_set_color "$TT_DEFAULT"
+_tt_set_color "$(_tt_idle_color)"
